@@ -10,21 +10,57 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin(origins = "*") // Allow all origins for dev simplicity
+@CrossOrigin(origins = "*")
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
+    // 1. LEER TODOS
     @GetMapping
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
     }
 
+    // 2. LEER UNO
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         return productService.getProductById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    // 3. CREAR (POST)
+    @PostMapping
+    public Product createProduct(@RequestBody Product product) {
+        // Aquí llegará el JSON con la URL de la imagen de Cloudinary
+        return productService.saveProduct(product);
+    }
+
+    // 4. ACTUALIZAR (PUT)
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
+        return productService.getProductById(id)
+                .map(existingProduct -> {
+                    existingProduct.setName(productDetails.getName());
+                    existingProduct.setCategory(productDetails.getCategory());
+                    existingProduct.setDescription(productDetails.getDescription());
+                    existingProduct.setImageUrl(productDetails.getImageUrl());
+                    
+                    Product updated = productService.saveProduct(existingProduct);
+                    return ResponseEntity.ok(updated);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // 5. ELIMINAR (DELETE)
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        if (productService.getProductById(id).isPresent()) {
+            productService.deleteProduct(id);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

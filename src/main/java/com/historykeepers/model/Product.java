@@ -1,8 +1,6 @@
 package com.historykeepers.model;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
-import java.util.List;
 
 @Entity
 @Table(name = "products")
@@ -19,29 +17,17 @@ public class Product {
 
     private String category;
 
-    private BigDecimal price;
-
-    private Integer stock;
-
-    @ElementCollection
-    @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "image_url")
-    private List<String> images;
+    private String imageUrl; 
 
-    public Product() {
-    }
+    public Product() {}
 
-    public Product(String name, String description, String category, BigDecimal price, Integer stock,
-            List<String> images) {
+    public Product(String name, String description, String category, String imageUrl) {
         this.name = name;
         this.description = description;
         this.category = category;
-        this.price = price;
-        this.stock = stock;
-        this.images = images;
+        this.imageUrl = imageUrl;
     }
-
-    // Getters and Setters
 
     public Long getId() {
         return id;
@@ -75,27 +61,12 @@ public class Product {
         this.category = category;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public Integer getStock() {
-        return stock;
-    }
-
-    public void setStock(Integer stock) {
-        this.stock = stock;
-    }
-
-    public List<String> getImages() {
-        return images;
-    }
-
-    public void setImages(List<String> images) {
-        this.images = images;
-    }
 }
