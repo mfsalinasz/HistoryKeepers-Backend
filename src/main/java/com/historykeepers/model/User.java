@@ -16,12 +16,25 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(name = "correo", nullable = false, unique = true)
+    private String correo;
+
+    @Column(name = "nombre_completo", nullable = false)
+    private String nombreCompleto;
+
     public User() {
     }
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public User(String username, String password, String correo, String nombreCompleto) {
+        this.username = username;
+        this.password = password;
+        this.correo = correo;
+        this.nombreCompleto = nombreCompleto;
     }
 
     public Long getId() {
@@ -46,5 +59,21 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getNombreCompleto() {
+        return nombreCompleto;
+    }
+
+    public void setNombreCompleto(String nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
     }
 }
