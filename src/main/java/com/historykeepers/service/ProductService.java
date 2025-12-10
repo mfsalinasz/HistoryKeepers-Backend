@@ -29,4 +29,23 @@ public class ProductService {
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
+
+    // LÓGICA DE NEGOCIO: Agregar dato curioso respetando capas
+    public Product agregarDatoCurioso(Long id, String nuevoDato) {
+        // 1. Buscamos el producto (usando el repositorio)
+        return productRepository.findById(id)
+                .map(producto -> {
+                    // 2. Aplicamos la lógica (concatenar texto)
+                    String datoActual = producto.getDatoCurioso();
+                    if (datoActual == null) {
+                        datoActual = "";
+                    }
+                    producto.setDatoCurioso(datoActual + "\n- " + nuevoDato);
+                    
+                    // 3. Guardamos los cambios
+                    return productRepository.save(producto);
+                })
+                .orElse(null); // Si no existe, retornamos null
+    }
 }
+

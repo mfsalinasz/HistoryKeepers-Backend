@@ -20,6 +20,9 @@ public class Product {
     @Column(name = "image_url")
     private String imageUrl; 
 
+    @Column(columnDefinition = "TEXT")
+    private String datoCurioso;
+
     public Product() {}
 
     public Product(String name, String description, String category, String imageUrl) {
@@ -67,6 +70,14 @@ public class Product {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getDatoCurioso() {
+        return datoCurioso;
+    }
+
+    public void setDatoCurioso(String datoCurioso) {
+        this.datoCurioso = datoCurioso;
     }
 
 }

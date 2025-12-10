@@ -63,4 +63,17 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // ENDPOINT: Solo recibe y responde
+    @PostMapping("/{id}/curioso")
+    public ResponseEntity<Product> agregarDatoCurioso(@PathVariable Long id, @RequestBody String nuevoDato) {
+        // Delegamos el trabajo al servicio
+        Product productoActualizado = productService.agregarDatoCurioso(id, nuevoDato);
+        
+        if (productoActualizado != null) {
+            return ResponseEntity.ok(productoActualizado);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
