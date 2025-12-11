@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -25,9 +26,14 @@ public class UsuarioController {
     // Obtener un usuario por ID
     @GetMapping("/{id}")
     public ResponseEntity<User> obtenerUsuarioPorId(@PathVariable Long id) {
-        return usuarioServicio.obtenerUsuarioPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Optional<User> usuarioOpt = usuarioServicio.obtenerUsuarioPorId(id);
+
+        if (usuarioOpt.isPresent()) {
+            User usuario = usuarioOpt.get();
+            return ResponseEntity.ok(usuario);
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
     // Crear usuario nuevo
@@ -39,27 +45,33 @@ public class UsuarioController {
     // Actualizar usuario existente
     @PutMapping("/{id}")
     public ResponseEntity<User> actualizarUsuario(@PathVariable Long id, @RequestBody User datosUsuario) {
-        return usuarioServicio.obtenerUsuarioPorId(id)
-                .map(usuarioExistente -> {
-                    usuarioExistente.setUsername(datosUsuario.getUsername());
-                    usuarioExistente.setPassword(datosUsuario.getPassword());
-                    usuarioExistente.setCorreo(datosUsuario.getCorreo());
-                    usuarioExistente.setNombreCompleto(datosUsuario.getNombreCompleto());
+        Optional<User> usuarioOpt = usuarioServicio.obtenerUsuarioPorId(id);
 
-                    User usuarioActualizado = usuarioServicio.guardarUsuario(usuarioExistente);
-                    return ResponseEntity.ok(usuarioActualizado);
-                })
-                .orElse(ResponseEntity.notFound().build());
+        if (usuarioOpt.isPresent()) {
+            User usuarioExistente = usuarioOpt.get();
+
+            usuarioExistente.setUsername(datosUsuario.getUsername());
+            usuarioExistente.setPassword(datosUsuario.getPassword());
+            usuarioExistente.setCorreo(datosUsuario.getCorreo());
+            usuarioExistente.setNombreCompleto(datosUsuario.getNombreCompleto());
+
+            User usuarioActualizado = usuarioServicio.guardarUsuario(usuarioExistente);
+            return ResponseEntity.ok(usuarioActualizado);
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
     // Eliminar usuario
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarUsuario(@PathVariable Long id) {
-        return usuarioServicio.obtenerUsuarioPorId(id)
-                .map(usuario -> {
-                    usuarioServicio.eliminarUsuario(id);
-                    return ResponseEntity.ok().<Void>build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+        Optional<User> usuarioOpt = usuarioServicio.obtenerUsuarioPorId(id);
+
+        if (usuarioOpt.isPresent()) {
+            usuarioServicio.eliminarUsuario(id);
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.notFound().build();
     }
 }
