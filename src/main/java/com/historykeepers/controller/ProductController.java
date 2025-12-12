@@ -30,14 +30,14 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // 3. CREAR (POST)
+    // 3. CREAR
     @PostMapping
     public Product createProduct(@RequestBody Product product) {
         // Aquí llegará el JSON con la URL de la imagen de Cloudinary
         return productService.saveProduct(product);
     }
 
-    // 4. ACTUALIZAR (PUT)
+    // 4. ACTUALIZAR
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
         return productService.getProductById(id)
@@ -53,7 +53,7 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // 5. ELIMINAR (DELETE)
+    // 5. ELIMINAR
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         if (productService.getProductById(id).isPresent()) {
